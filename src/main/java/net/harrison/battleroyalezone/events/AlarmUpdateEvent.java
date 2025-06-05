@@ -52,9 +52,9 @@ public class AlarmUpdateEvent {
         }
 
         event.getServer().getPlayerList().broadcastSystemMessage(Component.literal( "毒圈将在" + ZoneConfig.getWarningTick(event.getStage()) / 20 + "秒后缩小至"
-                + ZoneConfig.getZoneSize(event.getStage()) + "大小"), true);
+                + ZoneConfig.getZoneSize(event.getStage()) + "格大小"), true);
         for (ServerPlayer player : event.getServer().getPlayerList().getPlayers()) {
-            ModMessages.sendToPlayer(new AlarmSoundS2CPacket(SoundEvents.EXPERIENCE_ORB_PICKUP, 0.9F, 1.0F), player);
+            ModMessages.sendToPlayer(new AlarmSoundS2CPacket(SoundEvents.EXPERIENCE_ORB_PICKUP, 0.9F, 0.8F), player);
         }
 
         hasBroadcastedWARNING = true;
@@ -67,7 +67,7 @@ public class AlarmUpdateEvent {
 
         event.getServer().getPlayerList().broadcastSystemMessage(Component.literal("毒圈正在收缩!"), true);
         for (ServerPlayer player : event.getServer().getPlayerList().getPlayers()) {
-            ModMessages.sendToPlayer(new AlarmSoundS2CPacket(SoundEvents.BEACON_ACTIVATE, 2.0F, 1.0F), player);
+            ModMessages.sendToPlayer(new AlarmSoundS2CPacket(SoundEvents.BEACON_ACTIVATE, 1.5F, 1.0F), player);
         }
 
         hasBroadcastedSHRINK = true;
