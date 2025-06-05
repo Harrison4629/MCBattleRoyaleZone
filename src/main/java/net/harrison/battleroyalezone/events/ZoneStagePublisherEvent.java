@@ -61,7 +61,7 @@ public class ZoneStagePublisherEvent {
     }
 
     private static void handleZoneStageOver() {
-        ZoneStagePublisherEvent.stage = ZoneConfig.getMaxStage();
+        stage = ZoneConfig.getMaxStage();
         currentState = ZoneStateEnum.IDLE;
         MinecraftForge.EVENT_BUS.post(new ZoneStageEvent(serverInstance, isRunning, zoneCenterX, zoneCenterZ, stage, currentState, 0));
     }
@@ -111,11 +111,11 @@ public class ZoneStagePublisherEvent {
 
     public static void startZoneSystem(CommandSourceStack source) {
 
-        ZoneStagePublisherEvent.serverInstance = source.getServer();
+        serverInstance = source.getServer();
 
         zoneCenterX = source.getPosition().x;
         zoneCenterZ = source.getPosition().z;
-        ZoneStagePublisherEvent.stage = 0;
+        stage = 0;
 
         WARNINGLeftTicks = ZoneConfig.getWarningTick(stage);
         SHRINKINGLeftTicks = ZoneConfig.getShrinkTick(stage);
