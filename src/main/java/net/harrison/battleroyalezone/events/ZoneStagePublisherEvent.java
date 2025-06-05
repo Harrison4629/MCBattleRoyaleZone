@@ -3,51 +3,48 @@ package net.harrison.battleroyalezone.events;
 import net.harrison.battleroyalezone.Battleroyalezone;
 import net.harrison.battleroyalezone.config.ZoneConfig;
 import net.harrison.battleroyalezone.events.customEvents.ZoneStageEvent;
+import net.harrison.battleroyalezone.events.customEvents.ZoneStateEnum;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
 
 
 @Mod.EventBusSubscriber(modid = Battleroyalezone.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ZoneStagePublisherEvent {
-    //private static final ZoneStagePublisherEvent INSTANCE = new ZoneStagePublisherEvent();
 
-    public static double zoneCenterX;
-    public static double zoneCenterZ;
-    public static int stage;
-    public static boolean isRunning = false;
+    private static MinecraftServer serverInstance;
+
+    private static double zoneCenterX;
+    private static double zoneCenterZ;
+    private static int stage;
+    private static boolean isRunning = false;
 
     private static int IDLELeftTicks;
     private static int WARNINGLeftTicks;
     private static int SHRINKINGLeftTicks;
 
 
-    //private ZoneStagePublisherEvent() {
-    //}
-//
-    //public static ZoneStagePublisherEvent getInstance() {
-    //    return INSTANCE;
-    //}
 
 
 
-    public enum ZoneState {
-        IDLE,           // 空闲状态
-        WARNING,        // 警告阶段
-        SHRINKING,      // 缩圈阶段
-    }
 
-    private static ZoneState currentState = ZoneState.IDLE;
+
+    private static ZoneStateEnum currentState = ZoneStateEnum.IDLE;
 
     @SubscribeEvent
     public static void onServerTick(TickEvent.ServerTickEvent event) {
-        if (!isRunning){
+
+        if (event.phase == TickEvent.Phase.START || event.side == LogicalSide.CLIENT) {
             return;
         }
 
-
+        if (!isRunning || serverInstance == null){
+            return;
+        }
 
         if (stage < ZoneConfig.getMaxStage()) {
 
@@ -72,59 +69,66 @@ public class ZoneStagePublisherEvent {
 
     private static void handleZoneStageOver() {
         isRunning = false;
-        ZoneStagePublisherEvent.stage = 0;
+        ZoneStagePublisherEvent.stage = ZoneConfig.getMaxStage();
+        currentState = ZoneStateEnum.IDLE;
+        MinecraftForge.EVENT_BUS.post(new ZoneStageEvent(serverInstance, isRunning, zoneCenterX, zoneCenterZ, stage, currentState, 0));
     }
 
     private static void handleIDLETicks(TickEvent.ServerTickEvent event) {
-        if (IDLELeftTicks > 0 ) {
-            IDLELeftTicks--;
+        if (IDLELeftTicks >= 0 ) {
 
             if (IDLELeftTicks %20 == 0) {
-                MinecraftForge.EVENT_BUS.post(new ZoneStageEvent(zoneCenterX, zoneCenterZ, stage, currentState));
+                MinecraftForge.EVENT_BUS.post(new ZoneStageEvent(serverInstance, isRunning, zoneCenterX, zoneCenterZ, stage, currentState, IDLELeftTicks));
             }
+
+            IDLELeftTicks--;
         } else {
-            currentState = ZoneState.WARNING;
+            currentState = ZoneStateEnum.WARNING;
             IDLELeftTicks = (int) ((Math.random() * 10) + 11) * 20;
         }
     }
 
     private static void handleWARNINGTicks(TickEvent.ServerTickEvent event) {
-        if (WARNINGLeftTicks > 0 ) {
-            WARNINGLeftTicks--;
+        if (WARNINGLeftTicks >= 0 ) {
 
             if (WARNINGLeftTicks %20 == 0) {
-                MinecraftForge.EVENT_BUS.post(new ZoneStageEvent(zoneCenterX, zoneCenterZ, stage, currentState));
+                MinecraftForge.EVENT_BUS.post(new ZoneStageEvent(serverInstance, isRunning, zoneCenterX, zoneCenterZ, stage, currentState, WARNINGLeftTicks));
             }
-        } else {
-            currentState = ZoneState.SHRINKING;
-            WARNINGLeftTicks = ZoneConfig.getWarningTick(stage + 1);
 
+            WARNINGLeftTicks--;
+        } else {
+            currentState = ZoneStateEnum.SHRINKING;
+            WARNINGLeftTicks = ZoneConfig.getWarningTick(Math.min(stage + 1, ZoneConfig.getMaxStage()-1));
         }
     }
 
     private static void handleSHRINKINGTicks(TickEvent.ServerTickEvent event) {
-        if (SHRINKINGLeftTicks > 0) {
-            SHRINKINGLeftTicks--;
+        if (SHRINKINGLeftTicks >= 0) {
 
             if (SHRINKINGLeftTicks % 20 == 0) {
-                MinecraftForge.EVENT_BUS.post(new ZoneStageEvent(zoneCenterX, zoneCenterZ, stage, currentState));
+                MinecraftForge.EVENT_BUS.post(new ZoneStageEvent(serverInstance, isRunning, zoneCenterX, zoneCenterZ, stage, currentState, SHRINKINGLeftTicks));
             }
+
+            SHRINKINGLeftTicks--;
         } else {
-            currentState = ZoneState.IDLE;
-            SHRINKINGLeftTicks = ZoneConfig.getShrinkTick(stage + 1);
+            currentState = ZoneStateEnum.IDLE;
+            SHRINKINGLeftTicks = ZoneConfig.getShrinkTick(Math.min(stage + 1, ZoneConfig.getMaxStage()-1));
             stage++;
         }
     }
 
     public static void startZoneSystem(CommandSourceStack source) {
+
+        ZoneStagePublisherEvent.serverInstance = source.getServer();
+
         zoneCenterX = source.getPosition().x;
         zoneCenterZ = source.getPosition().z;
         ZoneStagePublisherEvent.stage = 0;
 
-
         WARNINGLeftTicks = ZoneConfig.getWarningTick(stage);
+        SHRINKINGLeftTicks = ZoneConfig.getWarningTick(stage);
 
-        currentState = ZoneState.WARNING;
+        currentState = ZoneStateEnum.WARNING;
         isRunning = true;
     }
 
