@@ -24,7 +24,6 @@ public class ZoneAreaUpdateEvent {
             return;
         }
 
-
         switch (state) {
 
             case IDLE:
@@ -73,7 +72,6 @@ public class ZoneAreaUpdateEvent {
                     ZoneConfig.getZoneSize(Math.min(event.getStage(), ZoneConfig.getMaxStage() - 1)),
                     ZoneConfig.getShrinkTick(event.getStage()) * 50L);
         }
-
         hasShrinked = true;
     }
 }

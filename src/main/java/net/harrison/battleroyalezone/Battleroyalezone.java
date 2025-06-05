@@ -2,6 +2,7 @@ package net.harrison.battleroyalezone;
 
 import net.harrison.battleroyalezone.events.ZoneStagePublisherEvent;
 import net.harrison.battleroyalezone.init.ModCommands;
+import net.harrison.battleroyalezone.init.ModMessages;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.scores.Objective;
@@ -41,6 +42,7 @@ public class Battleroyalezone {
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
+        event.enqueueWork(ModMessages::register);
     }
 
     private void addCreative(CreativeModeTabEvent.BuildContents event) {

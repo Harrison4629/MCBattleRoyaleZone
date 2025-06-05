@@ -27,12 +27,6 @@ public class ZoneStagePublisherEvent {
     private static int WARNINGLeftTicks;
     private static int SHRINKINGLeftTicks;
 
-
-
-
-
-
-
     private static ZoneStateEnum currentState = ZoneStateEnum.IDLE;
 
     @SubscribeEvent
@@ -64,7 +58,6 @@ public class ZoneStagePublisherEvent {
         } else {
             handleZoneStageOver();
         }
-
     }
 
     private static void handleZoneStageOver() {
