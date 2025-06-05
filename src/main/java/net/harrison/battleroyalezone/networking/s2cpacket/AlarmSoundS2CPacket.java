@@ -1,11 +1,12 @@
 package net.harrison.battleroyalezone.networking.s2cpacket;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.registries.ForgeRegistries;
+
 import java.util.function.Supplier;
 
 public class AlarmSoundS2CPacket {
@@ -21,13 +22,13 @@ public class AlarmSoundS2CPacket {
 
     public AlarmSoundS2CPacket(FriendlyByteBuf buf) {
         ResourceLocation id = buf.readResourceLocation();
-        this.soundType = BuiltInRegistries.SOUND_EVENT.get(id);
+        this.soundType = ForgeRegistries.SOUND_EVENTS.getValue(id);
         this.volume = buf.readFloat();
         this.pitch = buf.readFloat();
     }
 
     public void toBytes(FriendlyByteBuf buf) {
-        ResourceLocation id = BuiltInRegistries.SOUND_EVENT.getKey(this.soundType);
+        ResourceLocation id = ForgeRegistries.SOUND_EVENTS.getKey(this.soundType);
         buf.writeResourceLocation(id);
         buf.writeFloat(this.volume);
         buf.writeFloat(this.pitch);
