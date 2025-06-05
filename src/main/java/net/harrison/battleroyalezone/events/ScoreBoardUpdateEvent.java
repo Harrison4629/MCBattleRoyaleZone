@@ -23,6 +23,9 @@ public class ScoreBoardUpdateEvent {
 
     @SubscribeEvent
     public static void onZoneStage(ZoneStageEvent event) {
+        if (event.getServer() == null) {
+            return;
+        }
 
         Scoreboard scoreboard = event.getServer().getScoreboard();
 
@@ -100,9 +103,14 @@ public class ScoreBoardUpdateEvent {
         Objective objective = scoreboard.getObjective(SCOREBOARD_OBJECTIVE_NAME);
         scoreboard.resetPlayerScore(SHRINK, objective);
 
-        Score score = scoreboard.getOrCreatePlayerScore(WARNING, objective);
+        Score score = null;
+        if (objective != null) {
+            score = scoreboard.getOrCreatePlayerScore(WARNING, objective);
+        }
 
-        score.setScore(seconds);
+        if (score != null) {
+            score.setScore(seconds);
+        }
     }
 
     private static void handleSHRINKINGScoreBoard(int seconds, ZoneStageEvent event) {
@@ -110,8 +118,13 @@ public class ScoreBoardUpdateEvent {
         Objective objective = scoreboard.getObjective(SCOREBOARD_OBJECTIVE_NAME);
         scoreboard.resetPlayerScore(WARNING, objective);
 
-        Score score = scoreboard.getOrCreatePlayerScore(SHRINK, objective);
+        Score score = null;
+        if (objective != null) {
+            score = scoreboard.getOrCreatePlayerScore(SHRINK, objective);
+        }
 
-        score.setScore(seconds);
+        if (score != null) {
+            score.setScore(seconds);
+        }
     }
 }

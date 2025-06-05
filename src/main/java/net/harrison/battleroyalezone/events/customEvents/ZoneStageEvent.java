@@ -10,7 +10,7 @@ public class ZoneStageEvent extends Event {
     private final ZoneStateEnum state;
     private final int stage;
     private final int StateLeftTicks;
-    private boolean running;
+    private final boolean running;
 
     public ZoneStageEvent(MinecraftServer server, boolean running, double centerX, double centerZ,
                           int stage, ZoneStateEnum state, int StateLeftTicks) {

@@ -29,7 +29,9 @@ public class AlarmSoundS2CPacket {
 
     public void toBytes(FriendlyByteBuf buf) {
         ResourceLocation id = ForgeRegistries.SOUND_EVENTS.getKey(this.soundType);
-        buf.writeResourceLocation(id);
+        if (id != null) {
+            buf.writeResourceLocation(id);
+        }
         buf.writeFloat(this.volume);
         buf.writeFloat(this.pitch);
     }

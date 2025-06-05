@@ -14,6 +14,9 @@ public class ZoneAreaUpdateEvent {
 
     @SubscribeEvent
     public static void onZoneStage(ZoneStageEvent event) {
+        if (event.getServer() == null) {
+            return;
+        }
 
         ZoneStateEnum state =  event.getState();
         double centerX = event.getCenterX();
