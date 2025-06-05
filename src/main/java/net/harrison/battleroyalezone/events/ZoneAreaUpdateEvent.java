@@ -19,8 +19,8 @@ public class ZoneAreaUpdateEvent {
         }
 
         ZoneStateEnum state =  event.getState();
-        double centerX = event.getCenterX();
-        double centerZ = event.getCenterZ();
+        double centerX = event.getZoneCenter().x;
+        double centerZ = event.getZoneCenter().z;
 
         if (!event.getRunningState()){
             resetWorldBorder(event);

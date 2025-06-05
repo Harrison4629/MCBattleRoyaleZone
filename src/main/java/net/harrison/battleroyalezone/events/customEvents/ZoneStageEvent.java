@@ -1,22 +1,21 @@
 package net.harrison.battleroyalezone.events.customEvents;
 
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.eventbus.api.Event;
 
 public class ZoneStageEvent extends Event {
     private final MinecraftServer server;
-    private final double centerX;
-    private final double centerZ;
+    private final Vec3 zoneCenter;
     private final ZoneStateEnum state;
     private final int stage;
     private final int StateLeftTicks;
     private final boolean running;
 
-    public ZoneStageEvent(MinecraftServer server, boolean running, double centerX, double centerZ,
+    public ZoneStageEvent(MinecraftServer server, boolean running, Vec3 zoneCenter,
                           int stage, ZoneStateEnum state, int StateLeftTicks) {
         this.running = running;
-        this.centerX = centerX;
-        this.centerZ = centerZ;
+        this.zoneCenter = zoneCenter;
         this.stage = stage;
         this.state = state;
         this.StateLeftTicks = StateLeftTicks;
@@ -27,12 +26,8 @@ public class ZoneStageEvent extends Event {
         return this.server;
     }
 
-    public double getCenterX() {
-        return this.centerX;
-    }
-
-    public double getCenterZ() {
-        return this.centerZ;
+    public Vec3 getZoneCenter() {
+        return this.zoneCenter;
     }
 
     public ZoneStateEnum getState() {

@@ -7,27 +7,30 @@ public class ZoneConfig {
     private static final int INI_ZONE_SIZE = 600;
 
     private static final int[] ZONE_SIZES = {
-            300,
+            400,
+            250,
             150,
-            70,
-            30,
-            5
+            80,
+            40,
+            10
     };
 
     private static final int[] ZONE_WARNING_TICKS = {
-            50 * tick,
-            40 * tick,
-            40 * tick,
+            60 * tick,
+            60 * tick,
+            60 * tick,
+            45 * tick,
             30 * tick,
             20 * tick
     };
 
     private static final int[] ZONE_SHRINK_TICKS = {
+            120 * tick,
+            120 * tick,
             90 * tick,
-            75 * tick,
             60 * tick,
-            45 * tick,
-            30 * tick
+            30 * tick,
+            20 * tick
     };
 
 

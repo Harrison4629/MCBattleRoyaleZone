@@ -6,6 +6,7 @@ import net.harrison.battleroyalezone.events.customEvents.ZoneStageEvent;
 import net.harrison.battleroyalezone.events.customEvents.ZoneStateEnum;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -18,8 +19,7 @@ public class ZoneStagePublisherEvent {
 
     private static MinecraftServer serverInstance;
 
-    private static double zoneCenterX;
-    private static double zoneCenterZ;
+    private static Vec3 zoneCenter;
     private static int stage;
     private static boolean isRunning = false;
 
@@ -63,14 +63,14 @@ public class ZoneStagePublisherEvent {
     private static void handleZoneStageOver() {
         stage = ZoneConfig.getMaxStage();
         currentState = ZoneStateEnum.IDLE;
-        MinecraftForge.EVENT_BUS.post(new ZoneStageEvent(serverInstance, isRunning, zoneCenterX, zoneCenterZ, stage, currentState, 0));
+        MinecraftForge.EVENT_BUS.post(new ZoneStageEvent(serverInstance, isRunning, zoneCenter, stage, currentState, 0));
     }
 
     private static void handleIDLETicks(TickEvent.ServerTickEvent event) {
         if (IDLELeftTicks >= 0 ) {
 
             if (IDLELeftTicks %20 == 0) {
-                MinecraftForge.EVENT_BUS.post(new ZoneStageEvent(serverInstance, isRunning, zoneCenterX, zoneCenterZ, stage, currentState, IDLELeftTicks));
+                MinecraftForge.EVENT_BUS.post(new ZoneStageEvent(serverInstance, isRunning, zoneCenter, stage, currentState, IDLELeftTicks));
             }
 
             IDLELeftTicks--;
@@ -84,7 +84,7 @@ public class ZoneStagePublisherEvent {
         if (WARNINGLeftTicks >= 0 ) {
 
             if (WARNINGLeftTicks %20 == 0) {
-                MinecraftForge.EVENT_BUS.post(new ZoneStageEvent(serverInstance, isRunning, zoneCenterX, zoneCenterZ, stage, currentState, WARNINGLeftTicks));
+                MinecraftForge.EVENT_BUS.post(new ZoneStageEvent(serverInstance, isRunning, zoneCenter, stage, currentState, WARNINGLeftTicks));
             }
 
             WARNINGLeftTicks--;
@@ -98,7 +98,7 @@ public class ZoneStagePublisherEvent {
         if (SHRINKINGLeftTicks >= 0) {
 
             if (SHRINKINGLeftTicks % 20 == 0) {
-                MinecraftForge.EVENT_BUS.post(new ZoneStageEvent(serverInstance, isRunning, zoneCenterX, zoneCenterZ, stage, currentState, SHRINKINGLeftTicks));
+                MinecraftForge.EVENT_BUS.post(new ZoneStageEvent(serverInstance, isRunning, zoneCenter, stage, currentState, SHRINKINGLeftTicks));
             }
 
             SHRINKINGLeftTicks--;
@@ -113,8 +113,7 @@ public class ZoneStagePublisherEvent {
 
         serverInstance = source.getServer();
 
-        zoneCenterX = source.getPosition().x;
-        zoneCenterZ = source.getPosition().z;
+        zoneCenter = source.getPosition();
         stage = 0;
 
         WARNINGLeftTicks = ZoneConfig.getWarningTick(stage);
@@ -127,7 +126,7 @@ public class ZoneStagePublisherEvent {
     public static void stopZoneSystem() {
         handleZoneStageOver();
         isRunning = false;
-        MinecraftForge.EVENT_BUS.post(new ZoneStageEvent(serverInstance, isRunning, zoneCenterX, zoneCenterZ, stage, currentState, 0));
+        MinecraftForge.EVENT_BUS.post(new ZoneStageEvent(serverInstance, isRunning, zoneCenter, stage, currentState, 0));
     }
 
 
