@@ -12,7 +12,8 @@ public class ZoneStageEvent extends Event {
     private final int StateLeftTicks;
     private boolean running;
 
-    public ZoneStageEvent(MinecraftServer server, boolean running, double centerX, double centerZ, int stage, ZoneStateEnum state, int StateLeftTicks) {
+    public ZoneStageEvent(MinecraftServer server, boolean running, double centerX, double centerZ,
+                          int stage, ZoneStateEnum state, int StateLeftTicks) {
         this.running = running;
         this.centerX = centerX;
         this.centerZ = centerZ;

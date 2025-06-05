@@ -68,7 +68,6 @@ public class ZoneStagePublisherEvent {
     }
 
     private static void handleZoneStageOver() {
-        isRunning = false;
         ZoneStagePublisherEvent.stage = ZoneConfig.getMaxStage();
         currentState = ZoneStateEnum.IDLE;
         MinecraftForge.EVENT_BUS.post(new ZoneStageEvent(serverInstance, isRunning, zoneCenterX, zoneCenterZ, stage, currentState, 0));
@@ -98,7 +97,7 @@ public class ZoneStagePublisherEvent {
             WARNINGLeftTicks--;
         } else {
             currentState = ZoneStateEnum.SHRINKING;
-            WARNINGLeftTicks = ZoneConfig.getWarningTick(Math.min(stage + 1, ZoneConfig.getMaxStage()-1));
+            WARNINGLeftTicks = ZoneConfig.getWarningTick(Math.min(stage + 1, ZoneConfig.getMaxStage() - 1));
         }
     }
 
@@ -112,7 +111,7 @@ public class ZoneStagePublisherEvent {
             SHRINKINGLeftTicks--;
         } else {
             currentState = ZoneStateEnum.IDLE;
-            SHRINKINGLeftTicks = ZoneConfig.getShrinkTick(Math.min(stage + 1, ZoneConfig.getMaxStage()-1));
+            SHRINKINGLeftTicks = ZoneConfig.getShrinkTick(Math.min(stage + 1, ZoneConfig.getMaxStage() - 1));
             stage++;
         }
     }
@@ -126,7 +125,7 @@ public class ZoneStagePublisherEvent {
         ZoneStagePublisherEvent.stage = 0;
 
         WARNINGLeftTicks = ZoneConfig.getWarningTick(stage);
-        SHRINKINGLeftTicks = ZoneConfig.getWarningTick(stage);
+        SHRINKINGLeftTicks = ZoneConfig.getShrinkTick(stage);
 
         currentState = ZoneStateEnum.WARNING;
         isRunning = true;
@@ -134,6 +133,8 @@ public class ZoneStagePublisherEvent {
 
     public static void stopZoneSystem() {
         handleZoneStageOver();
+        isRunning = false;
+        MinecraftForge.EVENT_BUS.post(new ZoneStageEvent(serverInstance, isRunning, zoneCenterX, zoneCenterZ, stage, currentState, 0));
     }
 
 

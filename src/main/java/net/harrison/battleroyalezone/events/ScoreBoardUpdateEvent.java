@@ -1,6 +1,7 @@
 package net.harrison.battleroyalezone.events;
 
 import net.harrison.battleroyalezone.Battleroyalezone;
+import net.harrison.battleroyalezone.config.ZoneConfig;
 import net.harrison.battleroyalezone.events.customEvents.ZoneStageEvent;
 import net.harrison.battleroyalezone.events.customEvents.ZoneStateEnum;
 import net.minecraft.world.scores.Objective;
@@ -33,7 +34,7 @@ public class ScoreBoardUpdateEvent {
 
         scoreboard.setDisplayObjective(Scoreboard.DISPLAY_SLOT_SIDEBAR, objective);
 
-        Score decorate = scoreboard.getOrCreatePlayerScore("_________", objective);
+        Score decorate = scoreboard.getOrCreatePlayerScore("----------", objective);
         decorate.setScore(0);
 
         if (!event.getRunningState()) {
@@ -41,8 +42,14 @@ public class ScoreBoardUpdateEvent {
             return;
         }
 
+        if (event.getState() == ZoneStateEnum.IDLE && event.getStage() == ZoneConfig.getMaxStage()) {
+            clearScore(event);
+            return;
+        }
 
-         ZoneStateEnum state =  event.getState();
+
+
+        ZoneStateEnum state =  event.getState();
 
          int Seconds = event.getStateLeftTicks() / 20;
          switch (state) {
@@ -61,19 +68,22 @@ public class ScoreBoardUpdateEvent {
              default:
                  break;
          }
-
-
-
-
     }
 
-    private static void resetScore(ZoneStageEvent event) {
+    private static void clearScore(ZoneStageEvent event) {
         Scoreboard scoreboard = event.getServer().getScoreboard();
         Objective objective = scoreboard.getObjective(SCOREBOARD_OBJECTIVE_NAME);
 
         scoreboard.resetPlayerScore(SHRINK, objective);
         scoreboard.resetPlayerScore(WARNING, objective);
-        scoreboard.resetPlayerScore("_________", objective);
+    }
+
+    private static void resetScore(ZoneStageEvent event) {
+        clearScore(event);
+
+        Scoreboard scoreboard = event.getServer().getScoreboard();
+        Objective objective = scoreboard.getObjective(SCOREBOARD_OBJECTIVE_NAME);
+        scoreboard.resetPlayerScore("----------", objective);
 
     }
 

@@ -31,6 +31,10 @@ public class ZoneConfig {
     };
 
 
+    public static int getIniZoneSize() {
+        return INI_ZONE_SIZE;
+    }
+
     public static int getZoneSize(int stage) {
         return ZONE_SIZES[stage];
     }
