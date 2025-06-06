@@ -80,11 +80,16 @@ mixin {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
+    maven {
+        url "file://${project.projectDir.parentFile}/LocalMaven"
+    }
 }
 
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
+
+    implementation fg.deobf("net.harrison:soundmanager:1.0.0")
 
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 

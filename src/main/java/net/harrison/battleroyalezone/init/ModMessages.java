@@ -1,10 +1,8 @@
 package net.harrison.battleroyalezone.init;
 
 import net.harrison.battleroyalezone.Battleroyalezone;
-import net.harrison.battleroyalezone.networking.s2cpacket.AlarmSoundS2CPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
@@ -34,11 +32,6 @@ public class ModMessages {
     }
 
     private static void registerS2CPackets(SimpleChannel net) {
-        net.messageBuilder(AlarmSoundS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
-                .decoder(AlarmSoundS2CPacket::new)
-                .encoder(AlarmSoundS2CPacket::toBytes)
-                .consumerMainThread(AlarmSoundS2CPacket::handle)
-                .add();
 
     }
 
